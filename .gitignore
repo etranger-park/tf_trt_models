@@ -1,0 +1,8 @@
+
+\.vscode/
+\build/
+\data/
+*.jpg
+*.egg
+*.pb
+tf_trt_models\.egg-info/

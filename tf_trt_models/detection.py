@@ -62,6 +62,11 @@ MODELS = {
         'mask_rcnn_resnet50_atrous_coco',
         'http://download.tensorflow.org/models/object_detection/mask_rcnn_resnet50_atrous_coco_2018_01_28.tar.gz',
         'mask_rcnn_resnet50_atrous_coco_2018_01_28',
+    ),
+    'faster_rcnn_inception_v2_coco': DetectionModel(
+        'faster_rcnn_inception_v2_coco',
+        'http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz',
+        'faster_rcnn_inception_v2_coco_2018_01_28',
     )
 }
 
@@ -79,6 +84,7 @@ def get_output_names(model):
 
 def download_detection_model(model, output_dir='.'):
     """Downloads a pre-trained object detection model"""
+    print("Real File******************************")
     global MODELS
 
     model_name = model
