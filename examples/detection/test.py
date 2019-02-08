@@ -10,7 +10,7 @@ import matplotlib.patches as patches
 import tensorflow as tf
 import numpy as np
 import time
-from tf_trt_models.detection import download_detection_model, build_detection_graph
+from tf_trt_models.detection import download_detection_model, build_detection_graph, read_detection_model
 
 print("**TEST Start**")
 
@@ -18,7 +18,7 @@ print("**TEST Start**")
 
 
 
-MODEL = 'faster_rcnn_inception_v2_coco'
+MODEL = 'ssd_inception_v2_coco'
 DATA_DIR = './data/'
 DEST_DIR = './dest/'
 CONFIG_FILE = MODEL + '.config'   # ./data/ssd_inception_v2_coco.config 
@@ -33,9 +33,10 @@ config_path, checkpoint_path = download_detection_model(MODEL, 'data')
 frozen_graph, input_names, output_names = build_detection_graph(
     config=config_path,
     checkpoint=checkpoint_path,
-    score_threshold=0.3,
     batch_size=1
 )
+
+# frozen_graph, output_names = read_detection_model(MODEL,DATA_DIR)
 
 print(output_names)
 
@@ -43,8 +44,9 @@ trt_graph = trt.create_inference_graph(
     input_graph_def=frozen_graph,
     outputs=output_names,
     max_batch_size=1,
+    maximum_cached_engines=3,
     max_workspace_size_bytes=1 << 25,
-    precision_mode='FP16',
+    precision_mode='FP32',
     minimum_segment_size=50
 )
 
@@ -112,6 +114,6 @@ for i in range(num_samples):
         tf_input: image_resized[None, ...]
     })
 t1 = time.time()
-print('Average runtime: %f seconds' % (float(t1 - t0) / num_samples))
+print('Average runtime: %f ms' % (float(t1 - t0) * 1000 / num_samples))
 
 tf_sess.close()
