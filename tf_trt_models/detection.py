@@ -189,7 +189,11 @@ def build_detection_graph(config, checkpoint,
 
     return frozen_graph, input_names, output_names
 
-def read_detection_model(model, data_dir='.'):
+def read_detection_model(model, frozen_dir='./dest/frozen/',
+	force_nms_cpu=True,
+	replace_relu6=True,
+	remove_assert=True
+):
     print("Read %s Model" % (model))
     global MODELS
 
@@ -197,20 +201,8 @@ def read_detection_model(model, data_dir='.'):
 
     model = MODELS[model_name]
 
-    output_names = [BOXES_NAME, CLASSES_NAME, SCORES_NAME, NUM_DETECTIONS_NAME]
-    frozen_graph = tf.GraphDef()
-    with open(os.path.join(data_dir,model.extract_dir, 'frozen_inference_graph.pb'), 'rb') as f:
-        frozen_graph.ParseFromString(f.read())
-    force_nms_cpu=True,
-    replace_relu6=True,
-    remove_assert=True,
+    trt_graph = tf.GraphDef()
+    with open(os.path.join(frozen_dir, model_name+'_trt.pb'), 'rb') as f:
+        trt_graph.ParseFromString(f.read())
 
-    # apply graph modifications
-    if force_nms_cpu:
-        frozen_graph = f_force_nms_cpu(frozen_graph)
-    if replace_relu6:
-        frozen_graph = f_replace_relu6(frozen_graph)
-    if remove_assert:
-        frozen_graph = f_remove_assert(frozen_graph)
-
-    return frozen_graph, output_names
+    return trt_graph
