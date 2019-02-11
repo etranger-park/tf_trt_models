@@ -4,6 +4,7 @@
 \data/
 \venv/
 *.jpg
+*.png
 *.egg
 *.pb
 tf_trt_models\.egg-info/
