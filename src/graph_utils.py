@@ -89,11 +89,3 @@ def replace_relu6(frozen_graph):
 def remove_assert(frozen_graph):
     remove_op(frozen_graph, 'Assert')
     return frozen_graph
-
-def expand_dim(frozen_graph):
-    for node in frozen_graph.node:
-        print(node.attr)
-        print(node.attr.tensor.tensor_shape)
-        # if node.dim == 3:
-        #     node = tf.expand_dims(node, 0)
-    return frozen_graph

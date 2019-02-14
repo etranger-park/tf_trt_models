@@ -32,7 +32,3 @@ echo $PWD
 echo "Installing slim library"
 $PYTHON setup.py install --user
 popd
-
-echo "Installing tf_trt_models"
-echo $PWD
-$PYTHON setup.py install --user

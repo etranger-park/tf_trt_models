@@ -1,7 +1,9 @@
 
 \.vscode/
 \build/
-\data/
+\data/protoc/*
+\data/trained_data/*
+\data/trained_model/*
 \venv/
 *.jpg
 *.png
