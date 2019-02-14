@@ -49,6 +49,9 @@ def main():
         tf_classes = tf_sess.graph.get_tensor_by_name('detection_classes:0')
         tf_num_detections = tf_sess.graph.get_tensor_by_name('num_detections:0')
         elapsed_times = []
+        if SAVED_RESULT_IMG:
+            subprocess.call(['mkdir', '-p', DEST_IMAGE_DIR])
+
         for image_path in TEST_IMAGE_PATHS[:100]:
             image = Image.open(image_path)
             # the array based representation of the image will be used later in order to prepare the
