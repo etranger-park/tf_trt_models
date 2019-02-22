@@ -2,10 +2,11 @@ import os
 from collections import namedtuple
 
 # Change Constancs, Model, CHECKPOINT_PREFIX
-MODEL = 'faster_rcnn_resnet101'
+MODEL = 'faster_rcnn_inception_v2_server'
 CHECKPOINT_PREFIX = 'model.ckpt-200000'
 SAVED_BUILD_FILE = True
-SAVED_RESULT_IMG = True
+SAVED_RESULT_IMG = False
+PRECISION_MODE ="FP16"
 
 CONFIG_FILE = 'pipeline.config'
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

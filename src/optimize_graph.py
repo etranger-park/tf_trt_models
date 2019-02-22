@@ -8,7 +8,8 @@ from constants import UNOPTIMIZE_MODEL_DIR, MODEL, CONFIG_PATH, \
     DOWNLOAD_DATA_DIR, \
     OPTIMZED_MODEL_DIR, \
     OPTIMZED_MODEL_FILE, \
-    FROZEN_MODEL_FILE
+    FROZEN_MODEL_FILE, \
+    PRECISION_MODE
 
 BOXES_NAME='detection_boxes'
 CLASSES_NAME='detection_classes'
@@ -33,7 +34,8 @@ def optimize():
                 config=config_path,
                 checkpoint=checkpoint_path,
                 batch_size=1,
-                output_dir=UNOPTIMIZE_MODEL_DIR
+                output_dir=UNOPTIMIZE_MODEL_DIR,
+                force_nms_cpu=True
             )
         print("Build Done")
 
@@ -47,13 +49,13 @@ def optimize():
                 input_graph_def=frozen_graph,
                 outputs=output_names,
                 max_batch_size=1,
-                maximum_cached_engines=3,
-                max_workspace_size_bytes=1 << 20,
-                precision_mode='FP32',
-                minimum_segment_size=20
+                maximum_cached_engines=5,
+                max_workspace_size_bytes=1 << 30,
+                precision_mode=PRECISION_MODE,
+                minimum_segment_size=150
             )
         with open(os.path.join(OPTIMZED_MODEL_DIR, OPTIMZED_MODEL_FILE), 'wb') as f:
-                f.write(trt_graph.SerializeToString())
+            f.write(trt_graph.SerializeToString())
 
     print("\n\nOptimize done, trt.pb file is in dest/frozen\n\n")
     tf_sess.close()

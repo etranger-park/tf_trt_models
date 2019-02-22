@@ -2,7 +2,7 @@ from PIL import Image
 import sys
 import os
 import time
-
+import subprocess
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -52,7 +52,7 @@ def main():
         if SAVED_RESULT_IMG:
             subprocess.call(['mkdir', '-p', DEST_IMAGE_DIR])
 
-        for image_path in TEST_IMAGE_PATHS[:100]:
+        for image_path in TEST_IMAGE_PATHS[:10]:
             image = Image.open(image_path)
             # the array based representation of the image will be used later in order to prepare the
             # result image with boxes and labels on it.
@@ -60,13 +60,14 @@ def main():
             # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
             image_np_expanded = np.expand_dims(image_np, axis=0)
             # Actual detection.
-            t0 = time.time()
-            (boxes, scores, classes, num) = tf_sess.run(
-                [tf_boxes, tf_scores, tf_classes, tf_num_detections],
-                feed_dict={tf_input: image_np_expanded})
-            t1 = time.time()
-            print("elapsed time (ms) : ", float(t1-t0)*1000)
-            elapsed_times.append(float(t1-t0)*1000)
+            for i in range(10):
+                t0 = time.time()
+                (boxes, scores, classes, num) = tf_sess.run(
+                    [tf_boxes, tf_scores, tf_classes, tf_num_detections],
+                    feed_dict={tf_input: image_np_expanded})
+                t1 = time.time()
+                print("elapsed time (ms) : %.2f \n" % (float(t1-t0)*1000))
+                elapsed_times.append(float(t1-t0)*1000)
             if SAVED_RESULT_IMG:
                 vis_util.visualize_boxes_and_labels_on_image_array(
                         image_np,
@@ -82,7 +83,7 @@ def main():
                 plt.close()
             del image
         TRASH = max(elapsed_times) # The First data makes dirty
-        print("avg. elapsed time: ", (sum(elapsed_times) - TRASH) / (len(elapsed_times) - 1))
+        print("avg. elapsed time: %.2f\n" % ((sum(elapsed_times) - TRASH) / (len(elapsed_times) - 1)))
 
         tf_sess.close()
 

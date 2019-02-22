@@ -5,8 +5,11 @@
 \data/trained_data/*
 \data/trained_model/*
 \venv/
+\third_party/
 *.jpg
 *.png
 *.egg
 *.pb
+*.pyc
 tf_trt_models\.egg-info/
+
